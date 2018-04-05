@@ -34,9 +34,11 @@ var MONGODB_URI = process.env.MONGODB_URI || "mongodb://localhost/scraper";
 mongoose.connect(MONGODB_URI, { useMongoClient: true });
 
 // import routes and give the server access to them
+var html_routes     = require("./controllers/html.js");
 var scrape_routes   = require("./controllers/scrape.js");
 var headline_routes = require("./controllers/headline.js");
 var note_routes     = require("./controllers/note.js");
+app.use(html_routes);
 app.use(scrape_routes);
 app.use(headline_routes);
 app.use(note_routes);
