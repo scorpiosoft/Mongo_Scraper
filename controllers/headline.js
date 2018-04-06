@@ -3,7 +3,7 @@ var router = express.Router();
 var db = require("../models");
 
 // Route for getting all Headlines from the db
-router.get("/headlines", function(req, res) {
+router.get("/api/headlines", function(req, res) {
   // Grab every document in the Headlines collection
   db.Headline.find({})
     .then(function(dbHeadline) {
@@ -17,7 +17,7 @@ router.get("/headlines", function(req, res) {
 });
 
 // Route for grabbing a specific Headline by id, populate it with it's note
-router.get("/headlines/:id", function(req, res) {
+router.get("/api/headlines/:id", function(req, res) {
   // Using the id passed in the id parameter, prepare a query that finds the matching one in our db...
   db.Headline.findOne({ _id: req.params.id })
     // ..and populate all of the notes associated with it
@@ -33,7 +33,7 @@ router.get("/headlines/:id", function(req, res) {
 });
 
 // Route for saving/updating an Headline's associated Note
-router.post("/headlines/:id", function(req, res) {
+router.post("/api/headlines/:id", function(req, res) {
   // Create a new note and pass the req.body to the entry
   db.Note.create(req.body)
     .then(function(dbNote) {

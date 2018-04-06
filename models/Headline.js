@@ -16,6 +16,12 @@ var HeadlineSchema = new Schema(
     type: String,
     required: true
   },
+  // `saved` is type Boolean with a defaut of false
+  saved:
+  {
+    type: Boolean,
+    default: false
+  },
   // `note` is an object that stores a Note id
   // ref links the ObjectId to the Note model
   note:

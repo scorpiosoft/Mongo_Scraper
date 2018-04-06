@@ -12,7 +12,7 @@ var cheerio = require("cheerio");
 //   </span>
 // </a>
 // A GET route for scraping the TwinCities.com website
-router.get("/scrape", function(req, res)
+router.get("/api/scrape", function(req, res)
 {
   // Make a request for TwinCites.com
   request("https://www.twincities.com/", function(error, response, html)
