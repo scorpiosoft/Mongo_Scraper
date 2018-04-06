@@ -115,11 +115,11 @@ $(document).ready(function()
   // click handler for scraping new headlines
   function headline_scrape()
   {
-    $.get("/api/scrape").then(function(data)
+    $.get("/api/scrape").then(function(message)
     {
       // reload page with new headlines
       init_page();
-      bootbox.alert("<h3 class='text-center mt-5'>" + data.message + "<h3>");
+      bootbox.alert("<h3 class='text-center mt-5'>" + message + "<h3>");
     });
   }
 });
