@@ -33,12 +33,12 @@ router.put("/api/headlines", function(req, res)
   });
 });
 
-// get a specific Headline by id, populate it with it's note
+// get a specific Headline by id, populate it with it's notes
 router.get("/api/headlines/:id", function(req, res)
 {
   // find one headline with matching _id
   // populate all the associated notes
-  db.Headline.findOne({ _id: req.params.id }).populate("note").then(function(dbHeadline)
+  db.Headline.findOne({_id: req.params.id}).populate("notes").then(function(dbHeadline)
   {
     // on success, send it back to the client
     res.json(dbHeadline);
@@ -57,7 +57,7 @@ router.post("/api/headlines/:id", function(req, res)
     // update the Headline to be associated with the new Note
     // { new: true } says to return the updated Headline (default is to return original)
     // chain another .then which receives the result of the query
-    return db.Headline.findOneAndUpdate({ _id: req.params.id }, { note: dbNote._id }, { new: true });
+    return db.Headline.findOneAndUpdate({_id: req.params.id}, {$push: {notes: dbNote._id}}, {new: true});
   }).then(function(dbHeadline)
   {
     // on success, send it back to the client

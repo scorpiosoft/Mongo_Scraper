@@ -22,13 +22,14 @@ var HeadlineSchema = new Schema(
     type: Boolean,
     default: false
   },
-  // `note` is an object that stores a Note id
+  // `notes` is an object that stores an array of Notes
   // ref links the ObjectId to the Note model
-  note:
-  {
-    type: Schema.Types.ObjectId,
-    ref: "Note"
-  }
+  notes: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: "Note"
+    }
+  ]
 });
 
 var Headline = mongoose.model("Headline", HeadlineSchema);
