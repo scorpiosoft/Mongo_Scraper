@@ -6,10 +6,10 @@ $(document).ready(function()
   $(document).on("click", ".btn.save", headline_save);
   $(document).on("click", ".scrape-new", headline_scrape);
 
-  init_page();
+  init_index();
 
   // initialize the page with unsaved headlines
-  function init_page()
+  function init_index()
   {
     // empty the headline container
     headline_container.empty();
@@ -18,7 +18,7 @@ $(document).ready(function()
     {
       if (data && data.length)
       {
-        // render them to the page
+        // render unsaved headlines to the page
         render_headlines(data);
       } else {
         // render message no headlines
@@ -48,14 +48,15 @@ $(document).ready(function()
         "<div class='card w-100'>",
           "<div class='card-body'>",
             "<div class='card-title'>",
-            "<h5>",
-            "<a class='headline-link' target='_blank' href='" + headline.link + "'>",
-              headline.title,
-            "</a>",
-            "</h5>",
-            "<a class='float-right btn btn-success save'>",
-              "Save Article",
-            "</a>",
+              "<h5 class='float-left'>",
+              "<a class='headline-link' target='_blank' href='" + headline.link + "'>",
+                headline.title,
+              "</a>",
+              "</h5>",
+              "<a class='float-right btn btn-success save'>",
+                "Save Article",
+              "</a>",
+            "</div>",
           "</div>",
         "</div>"
       ].join("")
@@ -71,16 +72,16 @@ $(document).ready(function()
     var empty_alert = $(
       [
         "<div class='alert alert-warning text-center'>",
-        "<h4>We don't have any new headlines.</h4>",
+          "<h4>We don't have any new headlines.</h4>",
         "</div>",
         "<div class='card'>",
           "<div class='card-body'>",
             "<div class='card-title text-center'>",
-            "<h3>What Would You Like To Do?</h3>",
+              "<h3>What Would You Like To Do?</h3>",
             "</div>",
             "<div class='card-text text-center'>",
-            "<h4><a class='scrape-new'>Try Scraping New Articles</a></h4>",
-            "<h4><a href='/saved'>Go to Saved Articles</a></h4>",
+              "<h4><a class='scrape-new'>Try Scraping New Articles</a></h4>",
+              "<h4><a href='/saved'>Go to Saved Articles</a></h4>",
             "</div>",
           "</div>",
         "</div>"
@@ -89,25 +90,25 @@ $(document).ready(function()
     headline_container.append(empty_alert);
   }
 
-  // click handler to save headlines
+  // click handler to save a headline
   function headline_save()
   {
     // retrieve the .data element
-    var temp_head = $(this).parents(".card").data();
-    temp_head.saved = true;
+    var new_headline = $(this).parents(".card").data();
+    new_headline.saved = true;
+    console.log("headline_save b4 ajax,", new_headline);
     // update the db
     $.ajax(
     {
       method: "PUT",
       url: "/api/headlines",
-      data: temp_head
+      data: new_headline
     }).then(function(data)
     {
-      // if successful, mongoose will send back an object containing key/value pair of "ok:1"
-      if (data.ok)
+      if (data)
       {
         // reload the page
-        init_page();
+        init_index();
       }
     });
   }
@@ -118,7 +119,7 @@ $(document).ready(function()
     $.get("/api/scrape").then(function(message)
     {
       // reload page with new headlines
-      init_page();
+      init_index();
       bootbox.alert("<h3 class='text-center mt-5'>" + message + "<h3>");
     });
   }
