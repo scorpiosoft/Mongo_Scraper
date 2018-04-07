@@ -68,4 +68,16 @@ router.post("/api/headlines/:id", function(req, res)
   });
 });
 
+// delete the Headline whose _id is passed in
+router.delete("/api/headlines/:id", function(req, res)
+{
+  db.Headline.deleteOne({_id: req.params.id}).then(function(result)
+  {
+    res.json(result);
+  }).catch(function(err)
+  {
+    res.json(err);
+  });
+});
+
 module.exports = router;

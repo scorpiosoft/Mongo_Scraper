@@ -112,6 +112,62 @@ $(document).ready(function()
     headline_container.append(emptyAlert);
   }
 
+  // on click handler for deleting a headline
+  function headline_delete()
+  {
+    // grab the .data element of the headline to delete
+    var axe_it = $(this).parents(".card").data();
+    $.ajax(
+    {
+      method: "DELETE",
+      url: "/api/headlines/" + axe_it._id
+    }).then(function(data)
+    {
+      // re-render if deleted
+      if (data)
+      {
+        init_saved();
+      }
+    });
+  }
+
+  // on click handler for opening the notes modal
+  function headline_notes()
+  {
+    // grab the .data element of the headline to note
+    var note_it = $(this).parents(".card").data();
+    // fetch notes for this headline
+    $.get("/api/headlines/" + note_it._id).then(function(data)
+    {
+      // HTML for notes modal
+      var modal_html =
+      [
+        "<div class='container-fluid text-center'>",
+          "<h4>Notes For Article: ",
+            note_it._id,
+          "</h4>",
+          "<hr />",
+          "<ul class='list-group note-container'>",
+          "</ul>",
+          "<textarea class='form-control' placeholder='New Note' rows='4'></textarea>",
+          "<button class='btn btn-success save'>Save Note</button>",
+        "</div>"
+      ].join("");
+      bootbox.dialog({
+        message: modal_html,
+        closeButton: true
+      });
+      var note_obj =
+      {
+        _id: note_it._id,
+        notes: data.notes || []
+      };
+      // attach headline data to note
+      $(".btn.save").data("headline", note_obj);
+      render_notes(note_obj);
+    });
+  }
+
   // render notes to the modal
   function render_notes(data)
   {
@@ -141,62 +197,6 @@ $(document).ready(function()
       }
     }
     $(".note-container").append(note_list);
-  }
-
-  // on click handler for deleting a headline
-  function headline_delete()
-  {
-    // grab the .data element of the headline to delete
-    var axe_it = $(this).parents(".card").data();
-    $.ajax(
-    {
-      method: "DELETE",
-      url: "/api/headlines/" + axe_it._id
-    }).then(function(data)
-    {
-      // re-render if deleted
-      if (data.ok)
-      {
-        init_saved();
-      }
-    });
-  }
-
-  // on click handler for opening the notes modal
-  function headline_notes()
-  {
-    // grab the .data element of the headline to note
-    var note_it = $(this).parents(".card").data();
-    // fetch notes for this headline
-    $.get("/api/headlines/" + note_it._id).then(function(data)
-    {
-      // HTML for notes modal
-      var modal_html =
-      [
-        "<div class='container-fluid text-center'>",
-          "<h4>Notes For Article: ",
-            note_it._id,
-          "</h4>",
-          "<hr />",
-          "<ul class='list-group note-container'>",
-          "</ul>",
-          "<textarea placeholder='New Note' rows='4'></textarea>", // cols='60'
-          "<button class='btn btn-success save'>Save Note</button>",
-        "</div>"
-      ].join("");
-      bootbox.dialog({
-        message: modal_html,
-        closeButton: true
-      });
-      var note_obj =
-      {
-        _id: note_it._id,
-        notes: data.notes || []
-      };
-      // attach headline data to note
-      $(".btn.save").data("headline", note_obj);
-      render_notes(note_obj);
-    });
   }
 
   // on click handler for saving a note
